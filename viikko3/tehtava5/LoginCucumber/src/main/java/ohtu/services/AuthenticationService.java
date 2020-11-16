@@ -51,7 +51,6 @@ public class AuthenticationService {
         if (password.length() < 8) {
             return true;
         }
-        System.out.println(password);
         for (char c : password.toCharArray()) {
             if (!Character.isLetter(c)) {
                 return false;
