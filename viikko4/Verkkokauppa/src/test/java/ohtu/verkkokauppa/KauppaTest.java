@@ -102,4 +102,67 @@ public class KauppaTest {
         verify(pankki).tilisiirto(eq("zahra"), anyInt(), eq("85763"), anyString(), eq(2));
     }
     
+    @Test
+    public void aloitaAsiointiNollaaEdellisenOstoksenTiedot() {
+        when(viite.uusi()).thenReturn(77);
+        
+        when(varasto.saldo(2)).thenReturn(43);
+        when(varasto.haeTuote(2)).thenReturn(new Tuote(2, "kauramaito", 3));
+        
+        k.aloitaAsiointi();
+        k.lisaaKoriin(2);
+        
+        k.aloitaAsiointi();
+        k.lisaaKoriin(2);
+        
+        k.tilimaksu("zahra", "85763");
+        
+        verify(pankki).tilisiirto(eq("zahra"), anyInt(), eq("85763"), anyString(), eq(3));
+    }
+    
+    @Test
+    public void pyydetaanUusiViiteJokaiselleMaksutapahtumalle() {
+        when(varasto.saldo(2)).thenReturn(43);
+        when(varasto.haeTuote(2)).thenReturn(new Tuote(2, "kauramaito", 3));
+        
+        k.aloitaAsiointi();
+        k.lisaaKoriin(2);
+        k.tilimaksu("zahra", "85763");
+        
+        verify(viite, times(1)).uusi();
+        
+        k.aloitaAsiointi();
+        k.lisaaKoriin(2);
+        k.tilimaksu("judit", "88766");
+        
+        verify(viite, times(2)).uusi();
+        
+        k.aloitaAsiointi();
+        k.lisaaKoriin(2);
+        k.tilimaksu("valo", "33454");
+        
+        verify(viite, times(3)).uusi();
+    }
+    
+    @Test
+    public void poistaKoristaPoistaaTuotteenKorista() {
+        when(viite.uusi()).thenReturn(77);
+        
+        when(varasto.saldo(2)).thenReturn(43);
+        when(varasto.haeTuote(2)).thenReturn(new Tuote(2, "kauramaito", 3));
+        
+        when(varasto.saldo(3)).thenReturn(52);
+        when(varasto.haeTuote(3)).thenReturn(new Tuote(3, "pulla", 2));
+        
+        k.aloitaAsiointi();
+        k.lisaaKoriin(2);
+        k.lisaaKoriin(3);
+        k.poistaKorista(2);
+        
+        
+        k.tilimaksu("zahra", "85763");
+        
+        verify(pankki).tilisiirto(eq("zahra"), anyInt(), eq("85763"), anyString(), eq(2));
+    }
+    
 }
