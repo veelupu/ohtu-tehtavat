@@ -1,0 +1,3 @@
+Lisää muutoksia - sama tehtävä ja sama tarkoitus.
+
+Nämä muutokset ovat viikon 5 tehtävää 1 varten. Tehtävässä on tarkoitus oppia käyttämään gitin tag-toimintoa.
